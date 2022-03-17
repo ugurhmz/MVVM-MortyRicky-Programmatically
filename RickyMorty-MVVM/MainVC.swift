@@ -7,6 +7,14 @@
 
 import UIKit
 
+
+protocol RickyOutputProtocol {
+    func changeLoading(isLoad: Bool)
+    func saveDatas(rickyList: [RickyInfo])      //ViewModelden geliyor.
+}
+
+
+
 class MainVC: UIViewController {
 
     
