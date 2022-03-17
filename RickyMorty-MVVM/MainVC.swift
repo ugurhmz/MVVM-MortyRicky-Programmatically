@@ -19,7 +19,7 @@ class MainVC: UIViewController {
         cv.showsVerticalScrollIndicator = false
         cv.showsHorizontalScrollIndicator = false
         cv.translatesAutoresizingMaskIntoConstraints = false
-        
+      
         // register ListCell
         cv.register(MainListCell.self,
                     forCellWithReuseIdentifier: MainListCell.identifier)
@@ -79,7 +79,7 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
     // kaç tane hücre olacağı
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return 15
+        return 12
     }
     
     
@@ -88,7 +88,8 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = generalCollectionView.dequeueReusableCell(withReuseIdentifier: MainListCell.identifier, for: indexPath) as! MainListCell
-        cell.backgroundColor = .red
+        cell.backgroundColor = .gray
+        cell.layer.cornerRadius = 20
         
         return cell
     }
@@ -107,7 +108,7 @@ extension MainVC: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: collectionView.frame.width,
+        return CGSize(width: collectionView.frame.width - 30,
                       height: collectionView.frame.width - 280)
     }
     
@@ -120,4 +121,14 @@ extension MainVC: UICollectionViewDelegateFlowLayout {
         
         return CGFloat(15)
     }
+    
+    
+    // Cell Outside
+       func collectionView(_ collectionView: UICollectionView,
+                           layout collectionViewLayout: UICollectionViewLayout,
+                           insetForSectionAt section: Int) -> UIEdgeInsets {
+
+           return UIEdgeInsets(top: 10, left: 15 , bottom: 10, right: 15)
+    }
+    
 }
