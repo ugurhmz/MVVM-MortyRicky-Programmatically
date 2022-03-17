@@ -88,7 +88,7 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = generalCollectionView.dequeueReusableCell(withReuseIdentifier: MainListCell.identifier, for: indexPath) as! MainListCell
-        cell.backgroundColor = .gray
+        cell.backgroundColor = .orange
         cell.layer.cornerRadius = 20
         
         return cell
