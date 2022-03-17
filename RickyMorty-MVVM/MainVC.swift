@@ -47,6 +47,9 @@ class MainVC: UIViewController {
         view.addSubview(generalCollectionView)
         setGeneralCollectionViewConstraints()
         
+        generalCollectionView.delegate = self
+        generalCollectionView.dataSource = self
+        
         navigationItem.searchController = searchController
     }
 
@@ -67,3 +70,54 @@ extension MainVC {
     }
 }
 
+
+
+
+//MARK: -  Delegate, DataSource
+extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    // kaç tane hücre olacağı
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return 15
+    }
+    
+    
+    // hücrenin datası
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = generalCollectionView.dequeueReusableCell(withReuseIdentifier: MainListCell.identifier, for: indexPath) as! MainListCell
+        cell.backgroundColor = .red
+        
+        return cell
+    }
+    
+    
+}
+
+
+
+//MARK: - ViewDelegateFlowLayout
+extension MainVC: UICollectionViewDelegateFlowLayout {
+    
+    
+    // cell w,h
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: collectionView.frame.width,
+                      height: collectionView.frame.width - 280)
+    }
+    
+    
+    
+    // dikeyde hücreler arası boşluk
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        
+        return CGFloat(15)
+    }
+}
