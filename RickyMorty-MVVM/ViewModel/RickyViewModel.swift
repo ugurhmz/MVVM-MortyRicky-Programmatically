@@ -52,7 +52,7 @@ final class RickyViewModel: RickyViewModelProtocol {
             
             self?.rickyCharacters = response ?? []  //Response'tan dönen datayı, benim yukardaki boş dizime(API'deki Modelin Tipiyle Tanımlı olan)
             
-            self?.rickyOutPut?.saveDatas(rickyList: self?.rickyCharacters ?? [])
+            self?.rickyOutPut?.saveDatas(values: self?.rickyCharacters ?? [])
         }
     }
     

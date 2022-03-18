@@ -10,13 +10,19 @@ import UIKit
 
 protocol RickyOutputProtocol {
     func changeLoading(isLoad: Bool)
-    func saveDatas(rickyList: [RickyInfo])      //ViewModelden geliyor.
+    func saveDatas(values: [RickyInfo])      //ViewModelden geliyor.
 }
 
 
 
 class MainVC: UIViewController {
 
+    
+    private lazy var rickyList: [RickyInfo] = []
+    lazy var viewModel = RickyViewModel()
+    private let indicator: UIActivityIndicatorView = UIActivityIndicatorView()
+    
+    
     
     // General Layout
     private let generalCollectionView: UICollectionView = {
@@ -48,21 +54,47 @@ class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        
+        viewModel.setDelegate(output: self)
+        viewModel.fetchItems()
     }
     
     
     func setupViews() {
         view.addSubview(generalCollectionView)
+        view.addSubview(indicator)
         setGeneralCollectionViewConstraints()
         
         generalCollectionView.delegate = self
         generalCollectionView.dataSource = self
         
         navigationItem.searchController = searchController
+        indicator.startAnimating()
     }
 
+    
+    
 
 }
+
+
+//MARK: -
+extension MainVC: RickyOutputProtocol {
+    
+    func changeLoading(isLoad: Bool) {
+        isLoad ? indicator.startAnimating() : indicator.stopAnimating()
+    }
+    
+    func saveDatas(values: [RickyInfo]) {
+        rickyList = values
+        generalCollectionView.reloadData()
+    }
+    
+}
+
+
+
+
 
 
 //MARK: - Constraints
@@ -87,7 +119,7 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
     // kaç tane hücre olacağı
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return 12
+        return rickyList.count
     }
     
     
@@ -96,8 +128,10 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = generalCollectionView.dequeueReusableCell(withReuseIdentifier: MainListCell.identifier, for: indexPath) as! MainListCell
-        cell.backgroundColor = .orange
+        
+        cell.backgroundColor = .systemOrange
         cell.layer.cornerRadius = 20
+        cell.saveModel(model: rickyList[indexPath.item])
         
         return cell
     }
@@ -140,3 +174,6 @@ extension MainVC: UICollectionViewDelegateFlowLayout {
     }
     
 }
+
+
+

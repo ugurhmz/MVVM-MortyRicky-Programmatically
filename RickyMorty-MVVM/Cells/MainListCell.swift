@@ -58,6 +58,12 @@ class MainListCell: UICollectionViewCell {
         setSpeciesLabelConstraints()
     }
     
+    // MainVC'den gelen datayı, burda hücre doldur. Modelim üzerinden
+    func saveModel(model: RickyInfo){
+        nameLabel.text = model.name
+        speciesLabel.text = "species: \(model.species ?? "")"
+    }
+    
     
 }
 
