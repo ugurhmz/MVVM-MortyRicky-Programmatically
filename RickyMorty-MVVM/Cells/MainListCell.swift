@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import AlamofireImage
 
 class MainListCell: UICollectionViewCell {
     
     static var identifier = "MainListCell"
+    
+    private let randomImage: String = "https://picsum.photos/200/300"
     
     private let imageView: UIImageView = {
         let iv = UIImageView()
@@ -24,6 +27,7 @@ class MainListCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24, weight: .bold)
         label.textColor = .white
+        label.numberOfLines = 0
         label.text = "Name: Ricky Mortin"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -56,10 +60,13 @@ class MainListCell: UICollectionViewCell {
         setImageViewConstraints()
         setNameLabelConstraints()
         setSpeciesLabelConstraints()
+       
     }
     
     // MainVC'den gelen datayı, burda hücre doldur. Modelim üzerinden
     func saveModel(model: RickyInfo){
+        imageView.af.setImage(withURL: URL(string: model.image ?? randomImage) ??
+                              URL(string: randomImage)!)
         nameLabel.text = model.name
         speciesLabel.text = "species: \(model.species ?? "")"
     }
@@ -84,8 +91,8 @@ extension MainListCell {
     private func  setNameLabelConstraints() {
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 30),
-            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20)
-            
+            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     

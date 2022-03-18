@@ -7,5 +7,5 @@ target 'RickyMorty-MVVM' do
 
   # Pods for RickyMorty-MVVM
   pod 'Alamofire', '~> 5.5'
-
+  pod 'AlamofireImage', '~> 4.1'
 end
