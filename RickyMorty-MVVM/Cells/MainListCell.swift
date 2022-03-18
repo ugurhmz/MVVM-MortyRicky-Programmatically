@@ -36,7 +36,7 @@ class MainListCell: UICollectionViewCell {
     private let speciesLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.textColor = .black
+        label.textColor = .lightGray
         label.text = "Species: Human"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -63,11 +63,11 @@ class MainListCell: UICollectionViewCell {
        
     }
     
-    // MainVC'den gelen datayı, burda hücre doldur. Modelim üzerinden
+    // MainVC'den gelen datayı, burda hücrelere doldur. Modelim üzerinden
     func saveModel(model: RickyInfo){
         imageView.af.setImage(withURL: URL(string: model.image ?? randomImage) ??
                               URL(string: randomImage)!)
-        nameLabel.text = model.name
+        nameLabel.text = "#\(model.id ?? 1) - \(model.name ?? "")"
         speciesLabel.text = "species: \(model.species ?? "")"
     }
     

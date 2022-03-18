@@ -23,6 +23,11 @@ class MainVC: UIViewController {
     private let indicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     
+    //search
+    var searchMode = false
+    var filteredRickyList = [RickyInfo]()
+    
+    
     
     // General Layout
     private let generalCollectionView: UICollectionView = {
@@ -41,14 +46,6 @@ class MainVC: UIViewController {
     }()
     
     
-    // searchBar
-    lazy var searchController: UISearchController = {
-        let sc = UISearchController(searchResultsController: nil)
-        sc.searchBar.tintColor = .black
-        sc.hidesNavigationBarDuringPresentation = false
-        return sc
-    }()
-    
     
     
     override func viewDidLoad() {
@@ -57,6 +54,7 @@ class MainVC: UIViewController {
         
         viewModel.setDelegate(output: self)
         viewModel.fetchItems()
+        configureSearchBarButton()
     }
     
     
@@ -67,8 +65,7 @@ class MainVC: UIViewController {
         
         generalCollectionView.delegate = self
         generalCollectionView.dataSource = self
-        
-        navigationItem.searchController = searchController
+       
         indicator.startAnimating()
     }
 
@@ -119,7 +116,7 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
     // kaç tane hücre olacağı
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return rickyList.count
+        return searchMode ? filteredRickyList.count : rickyList.count
     }
     
     
@@ -129,9 +126,15 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource {
         
         let cell = generalCollectionView.dequeueReusableCell(withReuseIdentifier: MainListCell.identifier, for: indexPath) as! MainListCell
         
-        cell.backgroundColor = .systemOrange
+        cell.layer.shadowColor = UIColor.white.cgColor
+        cell.layer.shadowOffset = CGSize(width:2, height:3)
+        cell.layer.shadowRadius = 2.5
+        cell.layer.shadowOpacity = 1
+        cell.layer.masksToBounds = false
+        
+        cell.backgroundColor = .black
         cell.layer.cornerRadius = 20
-        cell.saveModel(model: rickyList[indexPath.item])
+        searchMode ? cell.saveModel(model: filteredRickyList[indexPath.item]) :  cell.saveModel(model: rickyList[indexPath.item])
         
         return cell
     }
@@ -177,3 +180,71 @@ extension MainVC: UICollectionViewDelegateFlowLayout {
 
 
 
+extension MainVC {
+    
+    
+    func configureSearchBarButton(){
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search,
+                                                                target: self,
+                                                                action: #selector(showSearchBar))
+            navigationItem.rightBarButtonItem?.tintColor = .white
+    }
+    
+    @objc func showSearchBar(){
+            searchingFunc(shouldShow: true)
+    }
+        
+    
+    @objc func searchingFunc(shouldShow: Bool) {
+        if shouldShow {
+            // searchBar
+            let searchBar = UISearchBar()
+            searchBar.delegate = self
+            searchBar.sizeToFit()
+            searchBar.showsCancelButton = true
+            searchBar.becomeFirstResponder() // icona tıklayınca searchbar focus
+            searchBar.tintColor = .black
+            searchBar.searchTextField.backgroundColor = .white
+            searchBar.searchTextField.textColor = .black
+            
+            navigationItem.rightBarButtonItem = nil
+            navigationItem.titleView = searchBar
+            
+        } else {
+            navigationItem.titleView = nil
+            configureSearchBarButton()
+            searchMode = false
+            generalCollectionView.reloadData()
+        }
+    }
+}
+
+
+//MARK: - SearchBarDelegate
+extension MainVC: UISearchBarDelegate {
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.searchingFunc(shouldShow: false)
+    }
+    
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty || searchBar.text == nil {
+            searchMode = false
+            generalCollectionView.reloadData()
+            view.endEditing(true)
+        } else {    // search mode ON
+            
+            
+            searchMode = true
+            print(searchText)
+            filteredRickyList = rickyList.filter({
+                $0.name?.lowercased().contains(searchText.lowercased()) as! Bool
+                
+            })
+            
+            generalCollectionView.reloadData()
+        }
+    }
+    
+}
